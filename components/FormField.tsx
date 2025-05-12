@@ -47,18 +47,23 @@ const FormField = <T extends FieldValues>({
     <Controller
       name={name}
       control={control}
-      render={({ field }) => (
-        <FormItem>
+      render={({ field, fieldState }) => (
+        <FormItem className="w-full">
           <FormLabel className="label">{label}</FormLabel>
           <FormControl>
             <Input
               placeholder={placeholder}
               type={type}
+              className="input" // Apply .form .input styles
               {...field}
             />
           </FormControl>
-          <FormDescription>This is your public display name.</FormDescription>
-          <FormMessage />
+          {fieldState.error && <FormMessage />}
+          {name === 'name' && (
+            <FormDescription className="text-muted-foreground">
+              This is your public display name.
+            </FormDescription>
+          )}
         </FormItem>
       )}
     />
