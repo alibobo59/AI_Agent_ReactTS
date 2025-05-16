@@ -13,6 +13,11 @@ interface Feedback {
   createdAt: string;
 }
 
+interface SavedMessage {
+  role: 'user' | 'system' | 'assistant';
+  content: string;
+}
+
 interface Interview {
   id: string;
   role: string;

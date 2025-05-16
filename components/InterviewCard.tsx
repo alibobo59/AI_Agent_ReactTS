@@ -15,7 +15,7 @@ const InterviewCard = ({
   createdAt,
 }: InterviewCardProps) => {
   const feedback = null as Feedback | null;
-  const normalizedType = /mid/gi.test(type) ? 'Mixed' : type;
+  const normalizedType = /mix/gi.test(type) ? 'Mixed' : type;
   const formattedDate = dayjs(
     feedback?.createdAt || createdAt || Date.now(),
   ).format('MMM DD, YYYY');
@@ -31,7 +31,7 @@ const InterviewCard = ({
           px-4 
           py-2 
           rounded-bl-lg
-          bg-lifgt-400"
+          bg-light-400"
           >
             <p className="badge-text">{normalizedType}</p>
           </div>
@@ -46,27 +46,27 @@ const InterviewCard = ({
           <div className="flex flex-row gap-5 mt-3">
             <div className="flex flex-row gap-2">
               <Image
-                src={'/calendar.svg'}
+                src="/calendar.svg"
                 alt="Calendar"
                 width={22}
                 height={22}
               />
               <p>{formattedDate}</p>
-              <div className="flex flex-row gap-2 items-center">
-                <Image
-                  src="/star.svg"
-                  alt="Star"
-                  width={22}
-                  height={22}
-                />
-                <p>{feedback?.totalScore || '---'}/100</p>
-              </div>
             </div>
-            <p className="line-clamp-2 mt-5">
-              {feedback?.finalAssessment ||
-                'You have not taken the interview yet. Take it now to improve'}
-            </p>
+            <div className="flex flex-row gap-2 items-center">
+              <Image
+                src="/star.svg"
+                alt="Star"
+                width={22}
+                height={22}
+              />
+              <p>{feedback?.totalScore || '---'}/100</p>
+            </div>
           </div>
+          <p className="line-clamp-2 mt-5">
+            {feedback?.finalAssessment ||
+              'You have not taken the interview yet. Take it now to improve your skills.'}
+          </p>
           <div className="flex flex-row justify-between">
             <DisplayTechIcon techStack={techstack} />
             <Button className="btn-primary">
