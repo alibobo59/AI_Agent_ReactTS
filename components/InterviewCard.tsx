@@ -7,7 +7,7 @@ import Link from 'next/link';
 import DisplayTechIcon from './DisplayTechIcon';
 
 const InterviewCard = ({
-  interviewId,
+  id,
   userID,
   role,
   type,
@@ -72,9 +72,7 @@ const InterviewCard = ({
             <Button className="btn-primary">
               <Link
                 href={
-                  feedback
-                    ? `/interview/${interviewId}/feedback`
-                    : `/interview/${interviewId}`
+                  feedback ? `/interview/${id}/feedback` : `/interview/${id}`
                 }
               >
                 {feedback ? 'Check Feedback' : 'View Interview'}

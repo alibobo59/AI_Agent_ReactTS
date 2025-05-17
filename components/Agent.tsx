@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { vapi } from '@/lib/vapi.sdk';
+import { interviewer } from '@/constants';
 
 enum CallStatus {
   INACTIVE = 'INACTIVE',
@@ -11,7 +12,13 @@ enum CallStatus {
   CONNECTING = 'CONNECTING',
   FINISHED = 'FINISHED',
 }
-const Agent = ({ userName, userId, type }: AgentProps) => {
+const Agent = ({
+  userName,
+  userId,
+  type,
+  interviewId,
+  questions,
+}: AgentProps) => {
   const router = useRouter();
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
@@ -19,6 +26,7 @@ const Agent = ({ userName, userId, type }: AgentProps) => {
   useEffect(() => {
     const onCallStart = () => setCallStatus(CallStatus.ACTIVE);
     const onCallEnd = () => setCallStatus(CallStatus.FINISHED);
+
     const onMessage = (message: Message) => {
       if (message.type === 'transcript' && message.transcriptType === 'final') {
         const newMessage = { role: message.role, content: message.transcript };
@@ -46,7 +54,28 @@ const Agent = ({ userName, userId, type }: AgentProps) => {
       vapi.off('error', onError);
     };
   }, []);
+  const handleGenerateFeedback = async (messages: SavedMessage[]) => {
+    console.log('Generate feedback here');
+    //ToDO: Create a server action that generates feedback
+    const { success, id } = {
+      success: true,
+      id: 'feedback-id',
+    };
+    if (success && id) {
+      router.push(`/interview/${interviewId}/feedback`);
+    } else {
+      console.log('Failed to generate feedback');
+      router.push('/');
+    }
+  };
   useEffect(() => {
+    if (callStatus === CallStatus.FINISHED) {
+      if (type === 'generate') {
+        router.push('/');
+      } else {
+        handleGenerateFeedback(messages);
+      }
+    }
     if (callStatus === CallStatus.FINISHED) {
       router.push('/');
     }
@@ -54,18 +83,36 @@ const Agent = ({ userName, userId, type }: AgentProps) => {
   const latestMessage = messages[messages.length - 1]?.content;
   const handleCall = async () => {
     setCallStatus(CallStatus.CONNECTING);
-    const assistantOverrides = {
-      variableValues: {
-        username: userName,
-        userId: userId,
-      },
-      clientMessages: [], // Add if required by AssistantOverrides
-      serverMessages: [],
-    };
-    await vapi.start(
-      process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!,
-      assistantOverrides,
-    );
+    if (type === 'generate') {
+      const assistantOverrides = {
+        variableValues: {
+          username: userName,
+          userId: userId,
+        },
+        clientMessages: [], // Add if required by AssistantOverrides
+        serverMessages: [],
+      };
+      await vapi.start(
+        process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!,
+        assistantOverrides,
+      );
+    } else {
+      let formatedQuestions = '';
+      if (questions) {
+        formatedQuestions = questions
+          .map((question) => {
+            return `-${question}`;
+          })
+          .join('\n');
+      }
+      await vapi.start(interviewer, {
+        variableValues: {
+          questions: formatedQuestions,
+          clientMessages: [], // Add if required by AssistantOverrides
+          serverMessages: [],
+        },
+      });
+    }
   };
   const handleDisconnect = async () => {
     setCallStatus(CallStatus.FINISHED);
