@@ -58,16 +58,13 @@ const Agent = ({
   const handleGenerateFeedback = async (messages: SavedMessage[]) => {
     console.log('Generate feedback here');
     //ToDO: Create a server action that generates feedback
-    await createFeedback({
+
+    const { success, feedBackId } = await createFeedback({
       interviewId: interviewId!,
       userId: userId!,
       transcript: messages,
     });
-    const { success, id } = {
-      success: true,
-      id: 'feedback-id',
-    };
-    if (success && id) {
+    if (success && feedBackId) {
       router.push(`/interview/${interviewId}/feedback`);
     } else {
       console.log('Failed to generate feedback');
@@ -78,14 +75,14 @@ const Agent = ({
     if (callStatus === CallStatus.FINISHED) {
       if (type === 'generate') {
         router.push('/');
+      } else if (!interviewId) {
+        console.error('interviewId is undefined');
+        router.push('/');
       } else {
         handleGenerateFeedback(messages);
       }
     }
-    if (callStatus === CallStatus.FINISHED) {
-      router.push('/');
-    }
-  }, [messages, callStatus, type, userId]);
+  }, [messages, callStatus, type, userId, interviewId, router]);
   const latestMessage = messages[messages.length - 1]?.content;
   const handleCall = async () => {
     setCallStatus(CallStatus.CONNECTING);

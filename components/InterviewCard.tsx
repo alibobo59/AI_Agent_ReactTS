@@ -8,12 +8,14 @@ import DisplayTechIcon from './DisplayTechIcon';
 
 const InterviewCard = ({
   id,
-  userID,
+  userId,
   role,
   type,
   techstack,
   createdAt,
 }: InterviewCardProps) => {
+  console.log(id, ' Day la interviewId from interviewCard');
+
   const feedback = null as Feedback | null;
   const normalizedType = /mix/gi.test(type) ? 'Mixed' : type;
   const formattedDate = dayjs(

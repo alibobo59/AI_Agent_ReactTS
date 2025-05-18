@@ -10,12 +10,14 @@ import {
   getLatestInterviews,
 } from '@/lib/actions/general.actions';
 
-const Page = async () => {
+const page = async () => {
   const user = await getCurrentUser();
   const [userInterviews, latestInterviews] = await Promise.all([
     getInterviewsByUserId(user?.id),
-    getLatestInterviews({ userId: user?.id }), // Changed user?.id! to user?.id
+    getLatestInterviews({ userId: user?.id! }),
   ]);
+  console.log(userInterviews, 'Day la userInterviews');
+  console.log(latestInterviews, 'Day la latestInterviews');
 
   const hasPastInterviews = userInterviews?.length > 0;
   const hasUpComingInterviews = latestInterviews?.length > 0;
@@ -76,4 +78,4 @@ const Page = async () => {
   );
 };
 
-export default Page;
+export default page;

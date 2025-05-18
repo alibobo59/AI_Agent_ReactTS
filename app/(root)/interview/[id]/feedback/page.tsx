@@ -18,7 +18,7 @@ const Page = async ({ params }: RouteParams) => {
     interviewId: id,
     userId: user.id!,
   });
-  console.log(feedback);
+  console.log(feedback, 'here is feedback');
   return <div>page</div>;
 };
 

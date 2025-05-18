@@ -103,6 +103,10 @@ export async function createFeedback(params: CreateFeedbackParams) {
     };
   } catch (error) {
     console.error(error);
+    return {
+      success: false,
+      feedbackId: null,
+    };
   }
 }
 
