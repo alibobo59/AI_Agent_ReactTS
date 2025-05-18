@@ -59,12 +59,12 @@ const Agent = ({
     console.log('Generate feedback here');
     //ToDO: Create a server action that generates feedback
 
-    const { success, feedBackId } = await createFeedback({
+    const { success, feedbackId } = await createFeedback({
       interviewId: interviewId!,
       userId: userId!,
       transcript: messages,
     });
-    if (success && feedBackId) {
+    if (success && feedbackId) {
       router.push(`/interview/${interviewId}/feedback`);
     } else {
       console.log('Failed to generate feedback');

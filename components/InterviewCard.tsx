@@ -2,11 +2,12 @@ import React from 'react';
 import dayjs from 'dayjs';
 import Image from 'next/image';
 import { getRandomInterviewCover } from '@/lib/utils';
+import { getFeedbackByInterviewIdAndUserId } from '@/lib/actions/general.actions';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import DisplayTechIcon from './DisplayTechIcon';
 
-const InterviewCard = ({
+const InterviewCard = async ({
   id,
   userId,
   role,
@@ -16,7 +17,13 @@ const InterviewCard = ({
 }: InterviewCardProps) => {
   console.log(id, ' Day la interviewId from interviewCard');
 
-  const feedback = null as Feedback | null;
+  const feedback =
+    userId && id
+      ? await getFeedbackByInterviewIdAndUserId({
+          interviewId: id,
+          userId: userId,
+        })
+      : null;
   const normalizedType = /mix/gi.test(type) ? 'Mixed' : type;
   const formattedDate = dayjs(
     feedback?.createdAt || createdAt || Date.now(),
