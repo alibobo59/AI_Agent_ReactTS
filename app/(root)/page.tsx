@@ -10,11 +10,11 @@ import {
   getLatestInterviews,
 } from '@/lib/actions/general.actions';
 
-const page = async () => {
+const Page = async () => {
   const user = await getCurrentUser();
   const [userInterviews, latestInterviews] = await Promise.all([
     getInterviewsByUserId(user?.id),
-    getLatestInterviews({ userId: user?.id! }),
+    getLatestInterviews({ userId: user?.id }), // Changed user?.id! to user?.id
   ]);
 
   const hasPastInterviews = userInterviews?.length > 0;
@@ -76,4 +76,4 @@ const page = async () => {
   );
 };
 
-export default page;
+export default Page;

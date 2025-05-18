@@ -7,7 +7,7 @@ import DisplayTechIcon from '@/components/DisplayTechIcon';
 import Agent from '@/components/Agent';
 import { getCurrentUser } from '@/lib/actions/auth.action';
 
-const page = async ({ params }: RouteParams) => {
+const Page = async ({ params }: RouteParams) => {
   const { id } = await params;
   const user = await getCurrentUser();
   const interview = await getInterviewById(id);
@@ -44,4 +44,4 @@ const page = async ({ params }: RouteParams) => {
   );
 };
 
-export default page;
+export default Page;
